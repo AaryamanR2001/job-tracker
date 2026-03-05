@@ -1,0 +1,64 @@
+h2{
+  width: min(980px, calc(100% - 32px));
+  margin: 24px auto 12px auto;
+  text-align: center;
+  font-size: 2rem;
+}
+
+#message{
+  width: min(980px, calc(100% - 32px));
+  margin: 0 auto 14px auto;
+  font-weight: 700;
+  text-align: center;
+}
+
+#applications{
+  width: min(980px, calc(100% - 32px));
+  margin: 0 auto 40px auto;
+  display: grid;
+  gap: 14px;
+}
+
+#applications > a.navButton{
+  display:block;
+  text-align:center;
+  padding: 14px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid #dfe3ea;
+  border-radius: 16px;
+  box-shadow: 0 18px 35px rgba(0,0,0,0.08);
+}
+
+.application-card{
+  background: rgba(255,255,255,0.95);
+  border: 1px solid #dfe3ea;
+  border-radius: 16px;
+  box-shadow: 0 18px 35px rgba(0,0,0,0.08);
+  padding: 18px;
+}
+
+.application-card h3{
+  margin: 0 0 10px 0;
+  font-size: 1.15rem;
+}
+
+.application-card p{
+  margin: 6px 0;
+}
+
+
+.application-card button{
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #ef4444;
+  background: #ef4444;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.application-card button:hover{
+  background:#dc2626;
+  border-color:#dc2626;
+}
