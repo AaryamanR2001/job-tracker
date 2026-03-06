@@ -31,36 +31,80 @@ function Tracker() {
     }
   };
 
+  const updateStatus = async (id, newStatus) => {
+    try {
+      await axios.put(`http://localhost:8080/applications/${id}`, {
+        status: newStatus,
+      });
+
+      setMessage("Application updated!");
+      loadApplications();
+    } catch {
+      setMessage("Error updating application");
+    }
+  };
+
   return (
-  <div className="pageContent">
-    <h2 className="pageTitle">My Applications</h2>
+    <div className="pageContent">
+      <h2 className="pageTitle">My Applications</h2>
 
-    {message && <div id="message">{message}</div>}
+      {message && <div className="message">{message}</div>}
 
-    {applications.length === 0 ? (
-      <div className="emptyBanner">No applications yet.</div>
-    ) : (
-      <div className="card trackerCard">
-        <div id="applications">
-          {applications.map((app) => (
-            <div key={app._id} className="application-card">
-              <h3>
-                {app.position} @ {app.company}
-              </h3>
-              <p>Date: {app.appDate}</p>
-              <p>Status: {app.status}</p>
-              <p>Notes: {app.notes || "None"}</p>
+      {applications.length === 0 ? (
+        <div className="emptyBanner">No applications yet.</div>
+      ) : (
+        <div className="tableContainer">
+          <table className="applicationsTable">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Position</th>
+                <th>Date Applied</th>
+                <th>Status</th>
+                <th>Notes</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
 
-              <button onClick={() => deleteApplication(app._id)}>
-                Delete
-              </button>
-            </div>
-          ))}
+            <tbody>
+              {applications.map((app) => (
+                <tr key={app._id}>
+                  <td>{app.company}</td>
+                  <td>{app.position}</td>
+                  <td>{app.appDate.split("T")[0]}</td>
+
+                  <td>
+                    <select
+                      value={app.status}
+                      onChange={(e) =>
+                        updateStatus(app._id, e.target.value)
+                      }
+                    >
+                      <option value="Applied">Applied</option>
+                      <option value="Interview">Interviewing</option>
+                      <option value="Offer">Offer</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
+                  </td>
+
+                  <td>{app.notes || "None"}</td>
+
+                  <td>
+                    <button
+                      className="deleteBtn"
+                      onClick={() => deleteApplication(app._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
-    )}
-  </div>
-);
+      )}
+    </div>
+  );
 }
 
 export default Tracker;
