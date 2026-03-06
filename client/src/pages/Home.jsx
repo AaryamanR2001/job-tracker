@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function Home() {
   return (
-    <div className="page">
+    <div className="homePage">
       <div className="homeContainer">
         <h1>Job Application Tracker</h1>
 

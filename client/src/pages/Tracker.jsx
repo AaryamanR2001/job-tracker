@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import "../css/styles.css";
 import "../css/tracker.css";
+import "../css/styles.css";
 
 function Tracker() {
   const [applications, setApplications] = useState([]);
@@ -12,6 +11,7 @@ function Tracker() {
     try {
       const res = await axios.get("http://localhost:8080/applications");
       setApplications(res.data);
+      setMessage("");
     } catch {
       setMessage("Error loading applications");
     }
@@ -32,40 +32,35 @@ function Tracker() {
   };
 
   return (
-    <>
-      <nav className="nav">
-        <div className="navInner">
-          <div className="brand">Job Application Tracker</div>
-          <div className="navLinks">
-            <Link to="/" className="navButton">Home</Link>
-            <Link to="/apply" className="navButton">Apply</Link>
-            <Link to="/tracker" className="navButton active">Tracker</Link>
-          </div>
+  <div className="pageContent">
+    <h2 className="pageTitle">My Applications</h2>
+
+    {message && <div id="message">{message}</div>}
+
+    {applications.length === 0 ? (
+      <div className="emptyBanner">No applications yet.</div>
+    ) : (
+      <div className="card trackerCard">
+        <div id="applications">
+          {applications.map((app) => (
+            <div key={app._id} className="application-card">
+              <h3>
+                {app.position} @ {app.company}
+              </h3>
+              <p>Date: {app.appDate}</p>
+              <p>Status: {app.status}</p>
+              <p>Notes: {app.notes || "None"}</p>
+
+              <button onClick={() => deleteApplication(app._id)}>
+                Delete
+              </button>
+            </div>
+          ))}
         </div>
-      </nav>
-
-      <h2>My Applications</h2>
-      {message && <div>{message}</div>}
-
-      <div id="applications">
-        {applications.length === 0 && (
-          <div className="navButton">No applications yet.</div>
-        )}
-
-        {applications.map(app => (
-          <div key={app._id} className="application-card">
-            <h3>{app.position} @ {app.company}</h3>
-            <p>Date: {app.appDate}</p>
-            <p>Status: {app.status}</p>
-            <p>Notes: {app.notes || "None"}</p>
-            <button onClick={() => deleteApplication(app._id)}>
-              Delete
-            </button>
-          </div>
-        ))}
       </div>
-    </>
-  );
+    )}
+  </div>
+);
 }
 
 export default Tracker;

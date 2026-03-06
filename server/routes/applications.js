@@ -8,14 +8,18 @@ router.post("/", async (req, res) => {
     const newApp = await Application.create(req.body);
     res.status(201).json(newApp);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: "Failed to Create Application", details: err.message });
   }
 });
 
 // READ ALL
 router.get("/", async (req, res) => {
-  const apps = await Application.find();
-  res.status(200).json(apps);
+  try {
+    const apps = await Application.find();
+    res.status(200).json(apps);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to Retrieve Applications", details: err.message });
+  }
 });
 
 // READ ONE
@@ -25,7 +29,7 @@ router.get("/:id", async (req, res) => {
     if (!app) return res.status(404).json({ error: "Not found" });
     res.json(app);
   } catch {
-    res.status(400).json({ error: "Invalid ID" });
+    res.status(400).json({ error: "Invalid Application ID", details: err.message });
   }
 });
 
@@ -35,12 +39,12 @@ router.put("/:id", async (req, res) => {
     const updated = await Application.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { new: true, runValidators: true }
     );
-    if (!updated) return res.status(404).json({ error: "Not found" });
-    res.json(updated);
+    if (!updated) return res.status(404).json({ error: "Application Not Found" });
+    res.status(200).json(updated);
   } catch {
-    res.status(400).json({ error: "Update failed" });
+    res.status(400).json({ error: "Failed to Update Application", details: err.message });
   }
 });
 
@@ -48,10 +52,14 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const deleted = await Application.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ error: "Not found" });
-    res.json({ message: "Deleted successfully" });
+
+    if (!deleted) {
+      return res.status(404).json({ error: "Not found" });
+    }
+
+    res.status(200).json({ message: "Application Deleted Successfully" });
   } catch {
-    res.status(400).json({ error: "Delete failed" });
+    res.status(400).json({ error: "Failed to Delete Application", details: err.message });
   }
 });
 
